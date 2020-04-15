@@ -3,8 +3,11 @@ var ORMDatabase = /** @class */ (function () {
     function ORMDatabase() {
     }
     ORMDatabase.install = function () {
-        Container.register(ORMDatabase._ormDatabase);
-        return VuexORM.install(ORMDatabase._ormDatabase);
+        var plugin = VuexORM.install(ORMDatabase._ormDatabase);
+        return function (store) {
+            Container.register(store);
+            plugin(store);
+        };
     };
     ORMDatabase.registerEntity = function (model) {
         if (this._installed.indexOf(model) !== -1) {
