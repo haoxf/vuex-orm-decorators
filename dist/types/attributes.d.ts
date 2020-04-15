@@ -1,4 +1,4 @@
-import { Model, Attribute } from '@vuex-orm/core';
+import { Attribute, Model } from '@vuex-orm/core';
 import Mutator from '@vuex-orm/core/lib/attributes/contracts/Mutator';
 /**
  * Sets the property as the primary key of the model
@@ -8,7 +8,7 @@ export declare function PrimaryKey(): (target: Object, propertyName: string | sy
  * Adds the property as a model field
  * @param fieldType The field attribute
  */
-export declare function Field(fieldType: Attribute): (target: Object, propertyName: string | symbol) => void;
+export declare function Field(fieldType: () => Attribute): (target: Object, propertyName: string | symbol) => void;
 /**
  * Adds the property as a string typed field
  * @param defaultValue The default value for the field (if undefined the default will be '')
@@ -20,7 +20,7 @@ export declare function StringField(defaultValue?: string): (target: Object, pro
 export declare function IncrementField(): (target: Object, propertyName: string | symbol) => void;
 /**
  * Adds the property as a generic attribute field
- * @param defaultValue The default value for the field (if undiefine dthe default will be '')
+ * @param defaultValue The default value for the field (if undefined the default will be '')
  */
 export declare function AttrField(defaultValue?: any): (target: Object, propertyName: string | symbol) => void;
 /**
@@ -32,7 +32,7 @@ export declare function NumberField(defaultValue?: number): (target: Object, pro
  * Adds the property as a boolean typed field
  * @param defaultValue The default value for the field (if undefined the default will be FALSE)
  */
-export declare function BooleanField(value: any, mutator?: Mutator<boolean | null>): (target: Object, propertyName: string | symbol) => void;
+export declare function BooleanField(value?: any, mutator?: Mutator<boolean | null>): (target: Object, propertyName: string | symbol) => void;
 /**
  * Adds the property as a 'Has Many' relationship field
  * @param related The class of the related model

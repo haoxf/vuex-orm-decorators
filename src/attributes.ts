@@ -1,26 +1,27 @@
-import { Model, Attribute } from '@vuex-orm/core';
-import Mutator from '@vuex-orm/core/lib/attributes/contracts/Mutator';
-
-
+import { Attribute, Model } from '@vuex-orm/core'
+import Mutator from '@vuex-orm/core/lib/attributes/contracts/Mutator'
 
 /**
  * Sets the property as the primary key of the model
  */
 export function PrimaryKey() {
-    return (target: Object, propertyName: string | symbol): void => {
-        (target.constructor as any).primaryKey = propertyName;
-    };
+  return (target: Object, propertyName: string | symbol): void => {
+    const that = target.constructor as { _primaryKey?: (string | symbol)[] }
+    that._primaryKey = that._primaryKey || []
+    that._primaryKey.push(propertyName)
+  }
 }
 
 /**
  * Adds the property as a model field
  * @param fieldType The field attribute
  */
-export function Field(fieldType: Attribute) {
-    return (target: Object, propertyName: string | symbol): void => {
-        (target.constructor as any)._fields = (target.constructor as any)._fields || {};
-        (target.constructor as any)._fields[propertyName] = fieldType;
-    };
+export function Field(fieldType: () => Attribute) {
+  return (target: Object, propertyName: string | symbol): void => {
+    const that = target.constructor as { _fields?: Record<string | symbol, () => Attribute> }
+    that._fields = that._fields || {}
+    that._fields[propertyName as string] = fieldType
+  }
 }
 
 /**
@@ -28,22 +29,22 @@ export function Field(fieldType: Attribute) {
  * @param defaultValue The default value for the field (if undefined the default will be '')
  */
 export function StringField(defaultValue?: string) {
-    return Field(Model.string(defaultValue || ''));
+  return Field(() => Model.string(defaultValue || ''))
 }
 
 /**
  * Adds the property as an incremental field
  */
 export function IncrementField() {
-    return Field(Model.increment());
+  return Field(() => Model.increment())
 }
 
 /**
  * Adds the property as a generic attribute field
- * @param defaultValue The default value for the field (if undiefine dthe default will be '')
+ * @param defaultValue The default value for the field (if undefined the default will be '')
  */
 export function AttrField(defaultValue?: any) {
-    return Field(Model.attr(defaultValue));
+  return Field(() => Model.attr(defaultValue))
 }
 
 /**
@@ -51,15 +52,15 @@ export function AttrField(defaultValue?: any) {
  * @param defaultValue The default value for the field (if undefined the default will be 0)
  */
 export function NumberField(defaultValue?: number) {
-    return Field(Model.number(defaultValue || 0));
+  return Field(() => Model.number(defaultValue || 0))
 }
 
 /**
  * Adds the property as a boolean typed field
  * @param defaultValue The default value for the field (if undefined the default will be FALSE)
  */
-export function BooleanField(value: any, mutator?: Mutator<boolean | null>) {
-    return Field(Model.boolean(value, mutator));
+export function BooleanField(value?: any, mutator?: Mutator<boolean | null>) {
+  return Field(() => Model.boolean(value, mutator))
 }
 
 /**
@@ -69,7 +70,7 @@ export function BooleanField(value: any, mutator?: Mutator<boolean | null>) {
  * @param localKey The local key on the parent model
  */
 export function HasManyField(related: typeof Model | string, foreignKey: string, localKey?: string) {
-    return Field(Model.hasMany(related, foreignKey, localKey));
+  return Field(() => Model.hasMany(related, foreignKey, localKey))
 }
 
 /**
@@ -79,7 +80,7 @@ export function HasManyField(related: typeof Model | string, foreignKey: string,
  * @param localKey The local key on the parent model
  */
 export function HasOneField(related: typeof Model | string, foreignKey: string, localKey?: string) {
-    return Field(Model.hasOne(related, foreignKey, localKey));
+  return Field(() => Model.hasOne(related, foreignKey, localKey))
 }
 
 /**
@@ -89,38 +90,67 @@ export function HasOneField(related: typeof Model | string, foreignKey: string, 
  * @param ownerKey The key on the parent model
  */
 export function BelongsToField(parent: typeof Model | string, foreignKey: string, ownerKey?: string) {
-    return Field(Model.belongsTo(parent, foreignKey, ownerKey));
+  return Field(() => Model.belongsTo(parent, foreignKey, ownerKey))
 }
 
 export function HasManyByField(parent: typeof Model | string, foreignKey: string, ownerKey?: string) {
-    return Field(Model.hasManyBy(parent, foreignKey, ownerKey));
+  return Field(() => Model.hasManyBy(parent, foreignKey, ownerKey))
 }
 
-export function HasManyThroughField(related: typeof Model | string, through: typeof Model | string, firstKey: string, secondKey: string, localKey?: string, secondLocalKey?: string) {
-    return Field(Model.hasManyThrough(related, through, firstKey, secondKey, localKey, secondLocalKey));
+export function HasManyThroughField(
+  related: typeof Model | string,
+  through: typeof Model | string,
+  firstKey: string,
+  secondKey: string,
+  localKey?: string,
+  secondLocalKey?: string
+) {
+  return Field(() => Model.hasManyThrough(related, through, firstKey, secondKey, localKey, secondLocalKey))
 }
 
-export function BelongsToManyField(related: typeof Model | string, pivot: typeof Model | string, foreignPivotKey: string, relatedPivotKey: string, parentKey?: string, relatedKey?: string) {
-    return Field(Model.belongsToMany(related, pivot, foreignPivotKey, relatedPivotKey, parentKey, relatedKey));
+export function BelongsToManyField(
+  related: typeof Model | string,
+  pivot: typeof Model | string,
+  foreignPivotKey: string,
+  relatedPivotKey: string,
+  parentKey?: string,
+  relatedKey?: string
+) {
+  return Field(() => Model.belongsToMany(related, pivot, foreignPivotKey, relatedPivotKey, parentKey, relatedKey))
 }
 
 export function MorphToField(id: string, type: string) {
-    return Field(Model.morphTo(id, type));
+  return Field(() => Model.morphTo(id, type))
 }
 
 export function MorphOneField(related: typeof Model | string, id: string, type: string, localKey?: string) {
-    return Field(Model.morphOne(related, id, type, localKey));
+  return Field(() => Model.morphOne(related, id, type, localKey))
 }
 
 export function MorphManyField(related: typeof Model | string, id: string, type: string, localKey?: string) {
-    return Field(Model.morphMany(related, id, type, localKey));
+  return Field(() => Model.morphMany(related, id, type, localKey))
 }
 
-export function MorphToManyField(related: typeof Model | string, pivot: typeof Model | string, relatedId: string, id: string, type: string, parentKey?: string, relatedKey?: string) {
-    return Field(Model.morphToMany(related, pivot, relatedId, id, type, parentKey, relatedKey));
+export function MorphToManyField(
+  related: typeof Model | string,
+  pivot: typeof Model | string,
+  relatedId: string,
+  id: string,
+  type: string,
+  parentKey?: string,
+  relatedKey?: string
+) {
+  return Field(() => Model.morphToMany(related, pivot, relatedId, id, type, parentKey, relatedKey))
 }
 
-export function MorphedByManyField(related: typeof Model | string, pivot: typeof Model | string, relatedId: string, id: string, type: string, parentKey?: string, relatedKey?: string) {
-    return Field(Model.morphedByMany(related, pivot, relatedId, id, type, parentKey, relatedKey));
+export function MorphedByManyField(
+  related: typeof Model | string,
+  pivot: typeof Model | string,
+  relatedId: string,
+  id: string,
+  type: string,
+  parentKey?: string,
+  relatedKey?: string
+) {
+  return Field(() => Model.morphedByMany(related, pivot, relatedId, id, type, parentKey, relatedKey))
 }
-
