@@ -1,12 +1,13 @@
 import { Plugin } from 'vuex'
 
-import VuexORM, { Model } from '@vuex-orm/core'
+import VuexORM, { Container, Model } from '@vuex-orm/core'
 
 export class ORMDatabase {
   private static _ormDatabase = new VuexORM.Database()
   private static _installed = <typeof Model[]>[]
 
   public static install(): Plugin<any> {
+    Container.register(ORMDatabase._ormDatabase)
     return VuexORM.install(ORMDatabase._ormDatabase)
   }
 
