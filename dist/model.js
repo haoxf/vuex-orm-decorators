@@ -3,7 +3,7 @@ import { ORMDatabase } from './database';
  * Creates an vuex-orm Model
  * @param entityName The name of the entity to be used as the key for the state
  */
-export function OrmModel(entityName, parentEntity, types, typeKey) {
+export function OrmModel(entityName, typesPreregister, parentEntity, types, typeKey) {
     return function (constructor) {
         var model = constructor;
         // Set the entity name on the model constructor
@@ -47,6 +47,14 @@ export function OrmModel(entityName, parentEntity, types, typeKey) {
             }
             else {
                 target.primaryKey = target._primaryKey[0];
+            }
+        }
+        if (typesPreregister) {
+            for (var _i = 0, _a = Object.keys(typesPreregister); _i < _a.length; _i++) {
+                var key = _a[_i];
+                if (Object.prototype.hasOwnProperty.call(typesPreregister, key)) {
+                    ORMDatabase.registerEntity(typesPreregister[key]);
+                }
             }
         }
         // Register the entity in the database

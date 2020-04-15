@@ -19,6 +19,7 @@ interface OrmModelLike {
  */
 export function OrmModel(
   entityName: string,
+  typesPreregister?: { [key: string]: typeof Model },
   parentEntity?: string,
   types?: { [key: string]: typeof Model },
   typeKey?: string
@@ -68,6 +69,14 @@ export function OrmModel(
         delete target._primaryKey
       } else {
         target.primaryKey = target._primaryKey[0]
+      }
+    }
+
+    if (typesPreregister) {
+      for (const key of Object.keys(typesPreregister)) {
+        if (Object.prototype.hasOwnProperty.call(typesPreregister, key)) {
+          ORMDatabase.registerEntity(typesPreregister[key])
+        }
       }
     }
 

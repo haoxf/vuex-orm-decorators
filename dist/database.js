@@ -7,7 +7,7 @@ var ORMDatabase = /** @class */ (function () {
     };
     ORMDatabase.registerEntity = function (model) {
         if (this._installed.indexOf(model) !== -1) {
-            console.error("Unable to register entity " + model.name + ".  Entity already registered.");
+            // console.error(`Unable to register entity ${model.name}.  Entity already registered.`)
             return;
         }
         ORMDatabase._ormDatabase.register(model);
