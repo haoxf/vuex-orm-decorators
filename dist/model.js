@@ -50,11 +50,15 @@ export function OrmModel(entityName, typesPreregister, parentEntity, types, type
             }
         }
         if (typesPreregister) {
-            for (var _i = 0, _a = Object.keys(typesPreregister); _i < _a.length; _i++) {
-                var key = _a[_i];
-                if (Object.prototype.hasOwnProperty.call(typesPreregister, key)) {
-                    ORMDatabase.registerEntity(typesPreregister[key]);
+            var ret = typesPreregister.apply(typesPreregister);
+            if (ret instanceof Array) {
+                for (var _i = 0, ret_1 = ret; _i < ret_1.length; _i++) {
+                    var item = ret_1[_i];
+                    ORMDatabase.registerEntity(item);
                 }
+            }
+            else if (ret) {
+                ORMDatabase.registerEntity(ret);
             }
         }
         // Register the entity in the database

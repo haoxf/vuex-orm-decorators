@@ -19,7 +19,7 @@ interface OrmModelLike {
  */
 export function OrmModel(
   entityName: string,
-  typesPreregister?: { [key: string]: typeof Model },
+  typesPreregister?: { (): typeof Model | typeof Model[] },
   parentEntity?: string,
   types?: { [key: string]: typeof Model },
   typeKey?: string
@@ -73,10 +73,13 @@ export function OrmModel(
     }
 
     if (typesPreregister) {
-      for (const key of Object.keys(typesPreregister)) {
-        if (Object.prototype.hasOwnProperty.call(typesPreregister, key)) {
-          ORMDatabase.registerEntity(typesPreregister[key])
+      const ret = typesPreregister.apply(typesPreregister)
+      if (ret instanceof Array) {
+        for (const item of ret) {
+          ORMDatabase.registerEntity(item)
         }
+      } else if (ret) {
+        ORMDatabase.registerEntity(ret)
       }
     }
 
