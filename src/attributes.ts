@@ -69,8 +69,11 @@ export function BooleanField(value?: any, mutator?: Mutator<boolean | null>) {
  * @param foreignKey The foreign key of the related model
  * @param localKey The local key on the parent model
  */
-export function HasManyField(related: typeof Model | string, foreignKey: string, localKey?: string) {
-  return Field(() => Model.hasMany(related, foreignKey, localKey))
+export function HasManyField(args: () => { related: typeof Model | string; foreignKey: string; localKey?: string }) {
+  return Field(() => {
+    const params = args()
+    return Model.hasMany(params.related, params.foreignKey, params.localKey)
+  })
 }
 
 /**
@@ -79,8 +82,11 @@ export function HasManyField(related: typeof Model | string, foreignKey: string,
  * @param foreignKey The foreign key of the related model
  * @param localKey The local key on the parent model
  */
-export function HasOneField(related: typeof Model | string, foreignKey: string, localKey?: string) {
-  return Field(() => Model.hasOne(related, foreignKey, localKey))
+export function HasOneField(args: () => { related: typeof Model | string; foreignKey: string; localKey?: string }) {
+  return Field(() => {
+    const params = args()
+    return Model.hasOne(params.related, params.foreignKey, params.localKey)
+  })
 }
 
 /**
@@ -89,68 +95,137 @@ export function HasOneField(related: typeof Model | string, foreignKey: string, 
  * @param foreignKey The foreign key of this model
  * @param ownerKey The key on the parent model
  */
-export function BelongsToField(parent: typeof Model | string, foreignKey: string, ownerKey?: string) {
-  return Field(() => Model.belongsTo(parent, foreignKey, ownerKey))
+export function BelongsToField(args: () => { parent: typeof Model | string; foreignKey: string; ownerKey?: string }) {
+  return Field(() => {
+    const params = args()
+    return Model.belongsTo(params.parent, params.foreignKey, params.ownerKey)
+  })
 }
 
-export function HasManyByField(parent: typeof Model | string, foreignKey: string, ownerKey?: string) {
-  return Field(() => Model.hasManyBy(parent, foreignKey, ownerKey))
+export function HasManyByField(args: () => { parent: typeof Model | string; foreignKey: string; ownerKey?: string }) {
+  return Field(() => {
+    const params = args()
+    return Model.hasManyBy(params.parent, params.foreignKey, params.ownerKey)
+  })
 }
 
 export function HasManyThroughField(
-  related: typeof Model | string,
-  through: typeof Model | string,
-  firstKey: string,
-  secondKey: string,
-  localKey?: string,
-  secondLocalKey?: string
+  args: () => {
+    related: typeof Model | string
+    through: typeof Model | string
+    firstKey: string
+    secondKey: string
+    localKey?: string
+    secondLocalKey?: string
+  }
 ) {
-  return Field(() => Model.hasManyThrough(related, through, firstKey, secondKey, localKey, secondLocalKey))
+  return Field(() => {
+    const params = args()
+    return Model.hasManyThrough(
+      params.related,
+      params.through,
+      params.firstKey,
+      params.secondKey,
+      params.localKey,
+      params.secondLocalKey
+    )
+  })
 }
 
 export function BelongsToManyField(
-  related: typeof Model | string,
-  pivot: typeof Model | string,
-  foreignPivotKey: string,
-  relatedPivotKey: string,
-  parentKey?: string,
-  relatedKey?: string
+  args: () => {
+    related: typeof Model | string
+    pivot: typeof Model | string
+    foreignPivotKey: string
+    relatedPivotKey: string
+    parentKey?: string
+    relatedKey?: string
+  }
 ) {
-  return Field(() => Model.belongsToMany(related, pivot, foreignPivotKey, relatedPivotKey, parentKey, relatedKey))
+  return Field(() => {
+    const params = args()
+    return Model.belongsToMany(
+      params.related,
+      params.pivot,
+      params.foreignPivotKey,
+      params.relatedPivotKey,
+      params.parentKey,
+      params.relatedKey
+    )
+  })
 }
 
-export function MorphToField(id: string, type: string) {
-  return Field(() => Model.morphTo(id, type))
+export function MorphToField(args: () => { id: string; type: string }) {
+  return Field(() => {
+    const params = args()
+    return Model.morphTo(params.id, params.type)
+  })
 }
 
-export function MorphOneField(related: typeof Model | string, id: string, type: string, localKey?: string) {
-  return Field(() => Model.morphOne(related, id, type, localKey))
+export function MorphOneField(
+  args: () => { related: typeof Model | string; id: string; type: string; localKey?: string }
+) {
+  return Field(() => {
+    const params = args()
+    return Model.morphOne(params.related, params.id, params.type, params.localKey)
+  })
 }
 
-export function MorphManyField(related: typeof Model | string, id: string, type: string, localKey?: string) {
-  return Field(() => Model.morphMany(related, id, type, localKey))
+export function MorphManyField(
+  args: () => { related: typeof Model | string; id: string; type: string; localKey?: string }
+) {
+  return Field(() => {
+    const params = args()
+    return Model.morphMany(params.related, params.id, params.type, params.localKey)
+  })
 }
 
 export function MorphToManyField(
-  related: typeof Model | string,
-  pivot: typeof Model | string,
-  relatedId: string,
-  id: string,
-  type: string,
-  parentKey?: string,
-  relatedKey?: string
+  args: () => {
+    related: typeof Model | string
+    pivot: typeof Model | string
+    relatedId: string
+    id: string
+    type: string
+    parentKey?: string
+    relatedKey?: string
+  }
 ) {
-  return Field(() => Model.morphToMany(related, pivot, relatedId, id, type, parentKey, relatedKey))
+  return Field(() => {
+    const params = args()
+    return Model.morphToMany(
+      params.related,
+      params.pivot,
+      params.relatedId,
+      params.id,
+      params.type,
+      params.parentKey,
+      params.relatedKey
+    )
+  })
 }
 
 export function MorphedByManyField(
-  related: typeof Model | string,
-  pivot: typeof Model | string,
-  relatedId: string,
-  id: string,
-  type: string,
-  parentKey?: string,
-  relatedKey?: string
+  args: () => {
+    related: typeof Model | string
+    pivot: typeof Model | string
+    relatedId: string
+    id: string
+    type: string
+    parentKey?: string
+    relatedKey?: string
+  }
 ) {
-  return Field(() => Model.morphedByMany(related, pivot, relatedId, id, type, parentKey, relatedKey))
+  return Field(() => {
+    const params = args()
+    return Model.morphedByMany(
+      params.related,
+      params.pivot,
+      params.relatedId,
+      params.id,
+      params.type,
+      params.parentKey,
+      params.relatedKey
+    )
+  })
 }

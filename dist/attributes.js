@@ -60,8 +60,11 @@ export function BooleanField(value, mutator) {
  * @param foreignKey The foreign key of the related model
  * @param localKey The local key on the parent model
  */
-export function HasManyField(related, foreignKey, localKey) {
-    return Field(function () { return Model.hasMany(related, foreignKey, localKey); });
+export function HasManyField(args) {
+    return Field(function () {
+        var params = args();
+        return Model.hasMany(params.related, params.foreignKey, params.localKey);
+    });
 }
 /**
  * Adds the property as a 'Has One' relationship field
@@ -69,8 +72,11 @@ export function HasManyField(related, foreignKey, localKey) {
  * @param foreignKey The foreign key of the related model
  * @param localKey The local key on the parent model
  */
-export function HasOneField(related, foreignKey, localKey) {
-    return Field(function () { return Model.hasOne(related, foreignKey, localKey); });
+export function HasOneField(args) {
+    return Field(function () {
+        var params = args();
+        return Model.hasOne(params.related, params.foreignKey, params.localKey);
+    });
 }
 /**
  * Adds the property as a 'Belongs To' relationship field
@@ -78,31 +84,58 @@ export function HasOneField(related, foreignKey, localKey) {
  * @param foreignKey The foreign key of this model
  * @param ownerKey The key on the parent model
  */
-export function BelongsToField(parent, foreignKey, ownerKey) {
-    return Field(function () { return Model.belongsTo(parent, foreignKey, ownerKey); });
+export function BelongsToField(args) {
+    return Field(function () {
+        var params = args();
+        return Model.belongsTo(params.parent, params.foreignKey, params.ownerKey);
+    });
 }
-export function HasManyByField(parent, foreignKey, ownerKey) {
-    return Field(function () { return Model.hasManyBy(parent, foreignKey, ownerKey); });
+export function HasManyByField(args) {
+    return Field(function () {
+        var params = args();
+        return Model.hasManyBy(params.parent, params.foreignKey, params.ownerKey);
+    });
 }
-export function HasManyThroughField(related, through, firstKey, secondKey, localKey, secondLocalKey) {
-    return Field(function () { return Model.hasManyThrough(related, through, firstKey, secondKey, localKey, secondLocalKey); });
+export function HasManyThroughField(args) {
+    return Field(function () {
+        var params = args();
+        return Model.hasManyThrough(params.related, params.through, params.firstKey, params.secondKey, params.localKey, params.secondLocalKey);
+    });
 }
-export function BelongsToManyField(related, pivot, foreignPivotKey, relatedPivotKey, parentKey, relatedKey) {
-    return Field(function () { return Model.belongsToMany(related, pivot, foreignPivotKey, relatedPivotKey, parentKey, relatedKey); });
+export function BelongsToManyField(args) {
+    return Field(function () {
+        var params = args();
+        return Model.belongsToMany(params.related, params.pivot, params.foreignPivotKey, params.relatedPivotKey, params.parentKey, params.relatedKey);
+    });
 }
-export function MorphToField(id, type) {
-    return Field(function () { return Model.morphTo(id, type); });
+export function MorphToField(args) {
+    return Field(function () {
+        var params = args();
+        return Model.morphTo(params.id, params.type);
+    });
 }
-export function MorphOneField(related, id, type, localKey) {
-    return Field(function () { return Model.morphOne(related, id, type, localKey); });
+export function MorphOneField(args) {
+    return Field(function () {
+        var params = args();
+        return Model.morphOne(params.related, params.id, params.type, params.localKey);
+    });
 }
-export function MorphManyField(related, id, type, localKey) {
-    return Field(function () { return Model.morphMany(related, id, type, localKey); });
+export function MorphManyField(args) {
+    return Field(function () {
+        var params = args();
+        return Model.morphMany(params.related, params.id, params.type, params.localKey);
+    });
 }
-export function MorphToManyField(related, pivot, relatedId, id, type, parentKey, relatedKey) {
-    return Field(function () { return Model.morphToMany(related, pivot, relatedId, id, type, parentKey, relatedKey); });
+export function MorphToManyField(args) {
+    return Field(function () {
+        var params = args();
+        return Model.morphToMany(params.related, params.pivot, params.relatedId, params.id, params.type, params.parentKey, params.relatedKey);
+    });
 }
-export function MorphedByManyField(related, pivot, relatedId, id, type, parentKey, relatedKey) {
-    return Field(function () { return Model.morphedByMany(related, pivot, relatedId, id, type, parentKey, relatedKey); });
+export function MorphedByManyField(args) {
+    return Field(function () {
+        var params = args();
+        return Model.morphedByMany(params.related, params.pivot, params.relatedId, params.id, params.type, params.parentKey, params.relatedKey);
+    });
 }
 //# sourceMappingURL=attributes.js.map
