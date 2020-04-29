@@ -20,7 +20,7 @@ interface OrmModelLike {
 export function OrmModel(
   entityName: string,
   parentEntity?: string,
-  types?: { [key: string]: typeof Model },
+  types?: () => { [key: string]: typeof Model },
   typeKey?: string
 ) {
   return function <Model extends Function>(constructor: Model): Model | void {
@@ -37,7 +37,7 @@ export function OrmModel(
 
     // Setup the types and descriminator (if set)
     if (types) {
-      target.types = () => types
+      target.types = types
     }
     if (types && typeKey) {
       target.typeKey = typeKey

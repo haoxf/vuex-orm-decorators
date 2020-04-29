@@ -15,7 +15,7 @@ export function OrmModel(entityName, parentEntity, types, typeKey) {
         }
         // Setup the types and descriminator (if set)
         if (types) {
-            target.types = function () { return types; };
+            target.types = types;
         }
         if (types && typeKey) {
             target.typeKey = typeKey;
