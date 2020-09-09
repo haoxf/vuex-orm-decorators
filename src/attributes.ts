@@ -64,6 +64,15 @@ export function BooleanField(value?: any, mutator?: Mutator<boolean | null>) {
 }
 
 /**
+ * Adds the property as a boolean typed field
+ * @param value The default value for the field (if undefined the default will be null)
+ */
+export function DateField(value?: any, mutator?: Mutator<Date | null>) {
+  // @ts-ignore
+  return Field(() => Model.date(value, mutator))
+}
+
+/**
  * Adds the property as a 'Has Many' relationship field
  * @param related The class of the related model
  * @param foreignKey The foreign key of the related model

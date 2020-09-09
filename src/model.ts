@@ -24,8 +24,6 @@ export function OrmModel(
   typeKey?: string
 ) {
   return function <Model extends Function>(constructor: Model): Model | void {
-    const model: Function = constructor
-
     // Set the entity name on the model constructor
     const target = (constructor as any) as OrmModelLike
     target.entity = entityName
