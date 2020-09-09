@@ -34,6 +34,11 @@ export declare function NumberField(defaultValue?: number): (target: Object, pro
  */
 export declare function BooleanField(value?: any, mutator?: Mutator<boolean | null>): (target: Object, propertyName: string | symbol) => void;
 /**
+ * Adds the property as a boolean typed field
+ * @param value The default value for the field (if undefined the default will be null)
+ */
+export declare function DateField(value?: any, mutator?: Mutator<Date | null>): (target: Object, propertyName: string | symbol) => void;
+/**
  * Adds the property as a 'Has Many' relationship field
  * @param related The class of the related model
  * @param foreignKey The foreign key of the related model

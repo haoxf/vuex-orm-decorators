@@ -5,7 +5,6 @@ import { ORMDatabase } from './database';
  */
 export function OrmModel(entityName, parentEntity, types, typeKey) {
     return function (constructor) {
-        var model = constructor;
         // Set the entity name on the model constructor
         var target = constructor;
         target.entity = entityName;

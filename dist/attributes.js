@@ -55,6 +55,14 @@ export function BooleanField(value, mutator) {
     return Field(function () { return Model.boolean(value, mutator); });
 }
 /**
+ * Adds the property as a boolean typed field
+ * @param value The default value for the field (if undefined the default will be null)
+ */
+export function DateField(value, mutator) {
+    // @ts-ignore
+    return Field(function () { return Model.date(value, mutator); });
+}
+/**
  * Adds the property as a 'Has Many' relationship field
  * @param related The class of the related model
  * @param foreignKey The foreign key of the related model
